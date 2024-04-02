@@ -9,7 +9,6 @@ on:
       - main
   schedule:
     - cron: '31 7 * * 3'
-  workflow_dispatch:
 
 permissions:
   actions: read
@@ -39,6 +38,7 @@ jobs:
         with:
           languages: ${{ matrix.language }}
           source-root: src
+          queries: security-extended,security-and-quality
 
       - name: Autobuild
         id: autobuild
