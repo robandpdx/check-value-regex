@@ -6,84 +6,92 @@
  * variables following the pattern `INPUT_<INPUT_NAME>`.
  */
 
-import * as core from '@actions/core'
-import * as main from '../src/main'
+import * as core from '@actions/core';
+import * as main from '../src/main';
 
 // Mock the action's main function
-const runMock = jest.spyOn(main, 'run')
-
-// Other utilities
-const timeRegex = /^\d{2}:\d{2}:\d{2}/
+const runMock = jest.spyOn(main, 'run');
 
 // Mock the GitHub Actions core library
-let debugMock: jest.SpiedFunction<typeof core.debug>
-let errorMock: jest.SpiedFunction<typeof core.error>
-let getInputMock: jest.SpiedFunction<typeof core.getInput>
-let setFailedMock: jest.SpiedFunction<typeof core.setFailed>
-let setOutputMock: jest.SpiedFunction<typeof core.setOutput>
+let debugMock: jest.SpiedFunction<typeof core.debug>;
+let getInputMock: jest.SpiedFunction<typeof core.getInput>;
+let setFailedMock: jest.SpiedFunction<typeof core.setFailed>;
+let setOutputMock: jest.SpiedFunction<typeof core.setOutput>;
 
 describe('action', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    jest.clearAllMocks();
 
-    debugMock = jest.spyOn(core, 'debug').mockImplementation()
-    errorMock = jest.spyOn(core, 'error').mockImplementation()
-    getInputMock = jest.spyOn(core, 'getInput').mockImplementation()
-    setFailedMock = jest.spyOn(core, 'setFailed').mockImplementation()
-    setOutputMock = jest.spyOn(core, 'setOutput').mockImplementation()
-  })
+    debugMock = jest.spyOn(core, 'debug').mockImplementation();
+    getInputMock = jest.spyOn(core, 'getInput').mockImplementation();
+    setFailedMock = jest.spyOn(core, 'setFailed').mockImplementation();
+    setOutputMock = jest.spyOn(core, 'setOutput').mockImplementation();
+  });
 
-  it('sets the time output', async () => {
-    // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation(name => {
-      switch (name) {
-        case 'milliseconds':
-          return '500'
-        default:
-          return ''
+  it('should set output has-value to true if input has a value', () => {
+    getInputMock.mockImplementation((name: string) => {
+      if (name === 'input') {
+        return 'value';
       }
-    })
+      return '';
+    });
 
-    await main.run()
-    expect(runMock).toHaveReturned()
+    setOutputMock.mockImplementation((name: string, value: boolean) => {
+      expect(name).toBe('has-value');
+      expect(value).toBe(true);
+    });
 
-    // Verify that all of the core library functions were called correctly
-    expect(debugMock).toHaveBeenNthCalledWith(1, 'Waiting 500 milliseconds ...')
-    expect(debugMock).toHaveBeenNthCalledWith(
-      2,
-      expect.stringMatching(timeRegex)
-    )
-    expect(debugMock).toHaveBeenNthCalledWith(
-      3,
-      expect.stringMatching(timeRegex)
-    )
-    expect(setOutputMock).toHaveBeenNthCalledWith(
-      1,
-      'time',
-      expect.stringMatching(timeRegex)
-    )
-    expect(errorMock).not.toHaveBeenCalled()
-  })
+    main.run();
+    expect(runMock).toHaveBeenCalled();
 
-  it('sets a failed status', async () => {
-    // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation(name => {
-      switch (name) {
-        case 'milliseconds':
-          return 'this is not a number'
-        default:
-          return ''
+    expect(setOutputMock).toHaveBeenCalled();
+    expect(setFailedMock).not.toHaveBeenCalled();
+  });
+
+  it('should set output has-value to false if input does not have a value', () => {
+    getInputMock.mockReturnValueOnce('');
+
+    setOutputMock.mockImplementation((name: string, value: boolean) => {
+      expect(name).toBe('has-value');
+      expect(value).toBe(false);
+    });
+
+    main.run();
+    expect(runMock).toHaveBeenCalled();
+
+    expect(setOutputMock).toHaveBeenCalled();
+    expect(setFailedMock).not.toHaveBeenCalled();
+  });
+
+  it('should set a failed status if an error is thrown', () => {
+    getInputMock.mockImplementation((name: string) => {
+      if (name === 'input') {
+        throw new Error('Error getting input');
       }
-    })
+      return '';
+    });
 
-    await main.run()
-    expect(runMock).toHaveReturned()
+    main.run();
+    expect(runMock).toHaveBeenCalled();
 
-    // Verify that all of the core library functions were called correctly
-    expect(setFailedMock).toHaveBeenNthCalledWith(
-      1,
-      'milliseconds not a number'
-    )
-    expect(errorMock).not.toHaveBeenCalled()
-  })
-})
+    expect(setFailedMock).toHaveBeenCalledWith('Error getting input');
+    expect(setOutputMock).not.toHaveBeenCalled();
+  });
+
+  it('should set a failed status if an unknown error is thrown', () => {
+    getInputMock.mockImplementation((name: string) => {
+      if (name === 'input') {
+        // eslint-disable-next-line no-throw-literal
+        throw 'Unknown error';
+      }
+      return '';
+    });
+
+    main.run();
+    expect(runMock).toHaveBeenCalled();
+
+    expect(setFailedMock).toHaveBeenCalled();
+    expect(debugMock).toHaveBeenCalled();
+    expect(setOutputMock).not.toHaveBeenCalled();
+  });
+});

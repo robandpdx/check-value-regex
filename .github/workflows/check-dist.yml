@@ -13,9 +13,15 @@ on:
   pull_request:
     branches:
       - main
+    paths-ignore:
+      - '**.md'
+      - '**.yml'
   push:
     branches:
       - main
+    paths-ignore:
+      - '**.md'
+      - '**.yml'
 
 permissions:
   contents: read

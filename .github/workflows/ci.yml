@@ -4,12 +4,19 @@ on:
   pull_request:
     branches:
       - main
+    paths-ignore:
+      - '**.md'
   push:
     branches:
       - main
+    paths-ignore:
+      - '**.md'
 
 permissions:
   contents: read
+
+env:
+  TEST_ENV: test
 
 jobs:
   test-typescript:
@@ -53,12 +60,42 @@ jobs:
         id: checkout
         uses: actions/checkout@v4
 
-      - name: Test Local Action
-        id: test-action
+      - name: Check existing secret
+        id: check-existing-secret
         uses: ./
         with:
-          milliseconds: 2000
+          input: ${{ secrets.TEST_SECRET }}
 
-      - name: Print Output
-        id: output
-        run: echo "${{ steps.test-action.outputs.time }}"
+      - name: Fail if secret is not set
+        if: steps.check-existing-secret.outputs.has-value != 'true'
+        run: exit 1
+
+      - name: Check non-existing secret
+        id: check-non-existing-secret
+        uses: ./
+        with:
+          input: ${{ secrets.NON_EXISTING_SECRET }}
+
+      - name: Fail if secret is set
+        if: steps.check-non-existing-secret.outputs.has-value == 'true'
+        run: exit 1
+
+      - name: Check existing environment variable
+        id: check-existing-env
+        uses: ./
+        with:
+          input: ${{ env.TEST_ENV }}
+
+      - name: Fail if environment variable is not set
+        if: steps.check-existing-env.outputs.has-value != 'true'
+        run: exit 1
+
+      - name: Check non-existing environment variable
+        id: check-non-existing-env
+        uses: ./
+        with:
+          input: ${{ env.NON_EXISTING_ENV }}
+
+      - name: Fail if environment variable is set
+        if: steps.check-non-existing-env.outputs.has-value == 'true'
+        run: exit 1
