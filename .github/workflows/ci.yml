@@ -6,13 +6,13 @@ on:
       - main
     paths-ignore:
       - '**.md'
-      - 'script/**'      
+      - 'script/**'
   push:
     branches:
       - main
     paths-ignore:
       - '**.md'
-      - 'script/**'      
+      - 'script/**'
 
 permissions:
   contents: read

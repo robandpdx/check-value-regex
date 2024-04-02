@@ -4,8 +4,8 @@ on:
   pull_request:
     branches:
       - main
-    paths-ignore: 
-      - 'script/**'      
+    paths-ignore:
+      - 'script/**'
   push:
     branches:
       - main

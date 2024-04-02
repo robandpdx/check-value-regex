@@ -4,18 +4,18 @@
   "version": "0.0.0",
   "author": "",
   "private": true,
-  "homepage": "https://github.com/actions/typescript-action",
+  "homepage": "https://github.com/richardrigutins/check-value",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://github.com/richardrigutins/check-value.git"
   },
   "bugs": {
-    "url": "https://github.com/actions/typescript-action/issues"
+    "url": "https://github.com/richardrigutins/check-value/issues"
   },
   "keywords": [
     "actions",
     "node",
-    "setup"
+    "utilities"
   ],
   "exports": {
     ".": "./dist/index.js"
