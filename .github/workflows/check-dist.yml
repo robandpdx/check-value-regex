@@ -16,12 +16,14 @@ on:
     paths-ignore:
       - '**.md'
       - '**.yml'
+      - 'script/**'
   push:
     branches:
       - main
     paths-ignore:
       - '**.md'
       - '**.yml'
+      - 'script/**'
 
 permissions:
   contents: read

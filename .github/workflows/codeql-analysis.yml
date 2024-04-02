@@ -4,9 +4,13 @@ on:
   pull_request:
     branches:
       - main
+    paths-ignore: 
+      - 'script/**'    
   push:
     branches:
       - main
+    paths-ignore:
+      - 'script/**'
   schedule:
     - cron: '31 7 * * 3'
 
