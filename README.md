@@ -1,15 +1,15 @@
-# Check value regex
+# Check value regular expression
 
 This GitHub Action allows you to check if the value of a variable matches a
 regular rexpression and take action based on a match or not.
 
-It can be used to check if the value of a variable matches a regulare expression
+It can be used to check if the value of a variable matches a regular expression
 and use this information in a conditional statement to take different actions in
 a workflow.
 
 ## Features
 
-- Check if an input variable matches a regulare expression.
+- Check if an input variable matches a regular expression.
 
 ## Usage
 
