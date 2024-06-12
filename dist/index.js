@@ -24958,10 +24958,9 @@ function run() {
     try {
         const input = core.getInput('input');
         const regex = core.getInput('regex');
+        const expression = new RegExp(regex);
         // Check if the input matches regex
-        const matches = input.match(new RegExp(regex, 'g'));
-        // Set outputs for other workflow steps to use if matches is not null
-        if (matches !== null) {
+        if (expression.test(input)) {
             core.setOutput('matches', true);
         }
         else {
