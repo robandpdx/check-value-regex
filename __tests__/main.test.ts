@@ -28,16 +28,19 @@ describe('action', () => {
     setOutputMock = jest.spyOn(core, 'setOutput').mockImplementation();
   });
 
-  it('should set output has-value to true if input has a value', () => {
+  it('should set output matches to true if input matches regex', () => {
     getInputMock.mockImplementation((name: string) => {
       if (name === 'input') {
+        return 'value';
+      }
+      if (name === 'regex') {
         return 'value';
       }
       return '';
     });
 
     setOutputMock.mockImplementation((name: string, value: boolean) => {
-      expect(name).toBe('has-value');
+      expect(name).toBe('matches');
       expect(value).toBe(true);
     });
 
@@ -48,11 +51,12 @@ describe('action', () => {
     expect(setFailedMock).not.toHaveBeenCalled();
   });
 
-  it('should set output has-value to false if input does not have a value', () => {
-    getInputMock.mockReturnValueOnce('');
+  it('should set output matches to false if input does not match regex', () => {
+    getInputMock.mockReturnValueOnce('value');
+    getInputMock.mockReturnValueOnce('regex');
 
     setOutputMock.mockImplementation((name: string, value: boolean) => {
-      expect(name).toBe('has-value');
+      expect(name).toBe('matches');
       expect(value).toBe(false);
     });
 

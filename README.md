@@ -1,15 +1,15 @@
-# Check value
+# Check value regex
 
-This GitHub Action allows you to check the value of a variable and take action
-based on the value.
+This GitHub Action allows you to check if the value of a variable matches a
+regular rexpression and take action based on a match or not.
 
-It can be used to check the value of a variable or the existence of a secret and
-use this information in a conditional statement to take different actions in a
-workflow.
+It can be used to check if the value of a variable matches a regulare expression
+and use this information in a conditional statement to take different actions in
+a workflow.
 
 ## Features
 
-- Check if an input variable is set (e.g. is not empty or undefined).
+- Check if an input variable matches a regulare expression.
 
 ## Usage
 
@@ -17,24 +17,27 @@ workflow.
 
 - `input`: (**Required**) The input value to check. It can be a string, a
   variable, or a secret (e.g. `${{ secrets.MY_SECRET }}`).
+- `regex`: (**Required**) The regular expression to match the input value.
 
 ### Outputs
 
-- `has-value`: A boolean value indicating if the input has a value. It is `true`
-  if the input is not empty or undefined, and `false` otherwise.
+- `matches`: A boolean value indicating if the input matches the regular
+  expression. It is `true` if the input matches the regular expression, and
+  `false` otherwise.
 
 ### Example Usage
 
 ```yaml
-- name: Check value
-  id: check-my-secret
-  uses: richardrigutins/check-value@v1
+- name: Check value regex
+  id: check-my-input
+  uses: robandpdx/check-value-regex@v1
   with:
-    input: ${{ secrets.MY_SECRET }}
+    input: ${{ inputs.MY_VALUE }}
+    regex: '^[a-zA-Z0-9_]+$'
 
 - name: Use the output in a conditional statement
-  if: steps.check-my-secret.outputs.has-value == 'true'
-  run: echo "The secret has a value"
+  if: steps.check-my-input.outputs.matches == 'true'
+  run: echo "The input matches the regular expression"
 ```
 
 ## Development

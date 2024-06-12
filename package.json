@@ -4,13 +4,13 @@
   "version": "0.0.0",
   "author": "",
   "private": true,
-  "homepage": "https://github.com/richardrigutins/check-value",
+  "homepage": "https://github.com/robandpdx/check-value-regex",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/richardrigutins/check-value.git"
+    "url": "git+https://github.com/robandpdx/check-value-regex.git"
   },
   "bugs": {
-    "url": "https://github.com/richardrigutins/check-value/issues"
+    "url": "https://github.com/robandpdx/check-value-regex/issues"
   },
   "keywords": [
     "actions",

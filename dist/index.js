@@ -24957,10 +24957,16 @@ const core = __importStar(__nccwpck_require__(2186));
 function run() {
     try {
         const input = core.getInput('input');
-        // Check if the input has a value
-        const hasValue = input.length > 0;
-        // Set outputs for other workflow steps to use
-        core.setOutput('has-value', hasValue);
+        const regex = core.getInput('regex');
+        // Check if the input matches regex
+        const matches = input.match(new RegExp(regex, 'g'));
+        // Set outputs for other workflow steps to use if matches is not null
+        if (matches !== null) {
+            core.setOutput('matches', true);
+        }
+        else {
+            core.setOutput('matches', false);
+        }
     }
     catch (error) {
         if (error instanceof Error) {

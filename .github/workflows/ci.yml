@@ -62,42 +62,24 @@ jobs:
         id: checkout
         uses: actions/checkout@v4
 
-      - name: Check existing secret
-        id: check-existing-secret
+      - name: Check matching value
+        id: check-value
         uses: ./
         with:
-          input: ${{ secrets.TEST_SECRET }}
+          input: 'mobile-test1-test2-1234'
+          regex: 'mobile-[a-zA-Z0-9_-]+-[a-zA-Z0-9_-]+-[0-9]+.*'
 
-      - name: Fail if secret is not set
-        if: steps.check-existing-secret.outputs.has-value != 'true'
+      - name: Fail if value does not match
+        if: steps.check-value.outputs.matches != 'true'
         run: exit 1
 
-      - name: Check non-existing secret
-        id: check-non-existing-secret
+      - name: Check non-matching value
+        id: check-non-matching-value
         uses: ./
         with:
-          input: ${{ secrets.NON_EXISTING_SECRET }}
+          input: 'mobile-test1-test2-test3'
+          regex: 'mobile-[a-zA-Z0-9_-]+-[a-zA-Z0-9_-]+-[0-9]+.*'
 
-      - name: Fail if secret is set
-        if: steps.check-non-existing-secret.outputs.has-value == 'true'
-        run: exit 1
-
-      - name: Check existing environment variable
-        id: check-existing-env
-        uses: ./
-        with:
-          input: ${{ env.TEST_ENV }}
-
-      - name: Fail if environment variable is not set
-        if: steps.check-existing-env.outputs.has-value != 'true'
-        run: exit 1
-
-      - name: Check non-existing environment variable
-        id: check-non-existing-env
-        uses: ./
-        with:
-          input: ${{ env.NON_EXISTING_ENV }}
-
-      - name: Fail if environment variable is set
-        if: steps.check-non-existing-env.outputs.has-value == 'true'
+      - name: Fail if value matches
+        if: steps.check-non-matching-value.outputs.matches == 'true'
         run: exit 1

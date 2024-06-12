@@ -10,10 +10,13 @@ inputs:
   input:
     description: 'The input to check.'
     required: true
+  regex:
+    description: 'A regular expression to match the input against.'
+    required: true
 
 outputs:
-  has-value:
-    description: 'A boolean indicating whether the input has a value.'
+  matches:
+    description: 'A boolean indicating whether the input matches the regex.'
 
 runs:
   using: node20
