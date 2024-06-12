@@ -1,6 +1,6 @@
-name: 'Check value'
-description: 'Check the value of an input.'
-author: 'richardrigutins'
+name: 'Check value regex'
+description: 'Check the value of an input against a regular expression.'
+author: 'robandpdx'
 
 branding:
   icon: 'check-square'
