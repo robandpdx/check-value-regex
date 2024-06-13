@@ -1,7 +1,7 @@
 # Check value regular expression
 
 This GitHub Action allows you to check if the value of a variable matches
-aregular rexpression and take action based on a match or not.
+a regular rexpression and take action based on a match or not.
 
 It can be used to check if the value of a variable matches a regular expression
 and use this information in a conditional statement to take different actions in
