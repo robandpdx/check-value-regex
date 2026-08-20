@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: github-actions
     directory: /
     commit-message:
-      prefix: '[Chore] '
+      prefix: 'chore: '
     schedule:
       interval: weekly
     groups:
@@ -15,7 +15,7 @@ updates:
   - package-ecosystem: npm
     directory: /
     commit-message:
-      prefix: '[Chore] '
+      prefix: 'chore: '
     schedule:
       interval: weekly
     groups:

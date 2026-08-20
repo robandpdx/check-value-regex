@@ -13,6 +13,8 @@ ignorePatterns:
   - '**/dist/.*'
   - '**/coverage/.*'
   - '*.json'
+  - 'jest.config.js'
+  - 'rollup.config.ts'
 
 parser: '@typescript-eslint/parser'
 
@@ -22,6 +24,11 @@ parserOptions:
   project:
     - './.github/linters/tsconfig.json'
     - './tsconfig.json'
+
+settings:
+  import/resolver:
+    typescript:
+      alwaysTryTypes: true
 
 plugins:
   - jest
