@@ -6,26 +6,25 @@
  * variables following the pattern `INPUT_<INPUT_NAME>`.
  */
 
-import * as core from '@actions/core';
-import * as main from '../src/main';
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-// Mock the action's main function
-const runMock = jest.spyOn(main, 'run');
+const debugMock = jest.fn<(message: string) => void>();
+const getInputMock = jest.fn<(name: string) => string>();
+const setFailedMock = jest.fn<(message: string) => void>();
+const setOutputMock = jest.fn<(name: string, value: boolean) => void>();
 
-// Mock the GitHub Actions core library
-let debugMock: jest.SpiedFunction<typeof core.debug>;
-let getInputMock: jest.SpiedFunction<typeof core.getInput>;
-let setFailedMock: jest.SpiedFunction<typeof core.setFailed>;
-let setOutputMock: jest.SpiedFunction<typeof core.setOutput>;
+jest.unstable_mockModule('@actions/core', () => ({
+  debug: debugMock,
+  getInput: getInputMock,
+  setFailed: setFailedMock,
+  setOutput: setOutputMock,
+}));
+
+const main = await import('../src/main.js');
 
 describe('action', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-
-    debugMock = jest.spyOn(core, 'debug').mockImplementation();
-    getInputMock = jest.spyOn(core, 'getInput').mockImplementation();
-    setFailedMock = jest.spyOn(core, 'setFailed').mockImplementation();
-    setOutputMock = jest.spyOn(core, 'setOutput').mockImplementation();
   });
 
   it('should set output matches to true if input matches regex', () => {
@@ -45,7 +44,6 @@ describe('action', () => {
     });
 
     main.run();
-    expect(runMock).toHaveBeenCalled();
 
     expect(setOutputMock).toHaveBeenCalled();
     expect(setFailedMock).not.toHaveBeenCalled();
@@ -61,7 +59,6 @@ describe('action', () => {
     });
 
     main.run();
-    expect(runMock).toHaveBeenCalled();
 
     expect(setOutputMock).toHaveBeenCalled();
     expect(setFailedMock).not.toHaveBeenCalled();
@@ -76,7 +73,6 @@ describe('action', () => {
     });
 
     main.run();
-    expect(runMock).toHaveBeenCalled();
 
     expect(setFailedMock).toHaveBeenCalledWith('Error getting input');
     expect(setOutputMock).not.toHaveBeenCalled();
@@ -92,7 +88,6 @@ describe('action', () => {
     });
 
     main.run();
-    expect(runMock).toHaveBeenCalled();
 
     expect(setFailedMock).toHaveBeenCalled();
     expect(debugMock).toHaveBeenCalled();

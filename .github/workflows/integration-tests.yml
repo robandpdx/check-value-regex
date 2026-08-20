@@ -1,0 +1,53 @@
+name: Integration Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+      - 'script/**'
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+      - 'script/**'
+
+permissions:
+  contents: read
+
+env:
+  TEST_ENV: test
+
+jobs:
+  test-action:
+    name: GitHub Actions Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Check matching value
+        id: check-value
+        uses: ./
+        with:
+          input: 'mobile-test1-test2-1234'
+          regex: 'mobile-[a-zA-Z0-9_-]+-[a-zA-Z0-9_-]+-[0-9]+.*'
+
+      - name: Fail if value does not match
+        if: steps.check-value.outputs.matches != 'true'
+        run: exit 1
+
+      - name: Check non-matching value
+        id: check-non-matching-value
+        uses: ./
+        with:
+          input: 'mobile-test1-test2-test3'
+          regex: 'mobile-[a-zA-Z0-9_-]+-[a-zA-Z0-9_-]+-[0-9]+.*'
+
+      - name: Fail if value matches
+        if: steps.check-non-matching-value.outputs.matches == 'true'
+        run: exit 1

@@ -19,5 +19,5 @@ outputs:
     description: 'A boolean indicating whether the input matches the regex.'
 
 runs:
-  using: node20
+  using: node24
   main: dist/index.js
